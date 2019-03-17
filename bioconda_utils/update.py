@@ -411,6 +411,9 @@ class UpdateVersion(Filter):
                 for match in versions:
                     match['hoster'] = hoster
                     version_map[match["version"]][url] = match
+                logger.debug("Recipe %s: %s found versions: %s",
+                             recipe, hoster.__class__.__name__,
+                             [v['version'] for v in versions])
             except ClientResponseError as exc:
                 logger.debug("HTTP %s when getting %s", exc, url)
 
