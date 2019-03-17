@@ -471,7 +471,7 @@ FTPHoster:
     override:
       url: "ftp://{host}/{link}/edirect.tar.gz"
       link: "{path}{version}$"
-HTTPFolderHoster:
+HTTPVersionFolderHoster:
   - case: normal
     url: https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.7.1/ncbi-blast-2.7.1+-src.tar.gz
     version: 2.7.1
@@ -482,3 +482,14 @@ HTTPFolderHoster:
       - 2.8.1/
       - 2.9.0alpha/
     parsed_versions: ['2.7.1', '2.8.1', '2.9.0alpha']
+HTTPFolderHoster:
+  - case: normal
+    url: http://protocols.netlab.uky.edu/~zeng/MapSplice-v2.2.1.zip
+    version: 2.2.1
+    release_url:
+      - http://protocols.netlab.uky.edu/~zeng/
+    release_links:
+      - MapSplice-v2.1.0.zip
+      - MapSplice-v2.2.1.zip
+      - fusions_junction_header.txt
+    parsed_versions: ['2.1.0', '2.2.1']
