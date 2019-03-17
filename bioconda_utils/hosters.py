@@ -290,12 +290,32 @@ class FTPHoster(Hoster):
 
     version_pattern = r"(?:(?<=[/._-])[rv])?(?P<version>\d[\da-zA-Z\-+\.:\~_]{0,30}?)"
     host_pattern = r"(?P<host>[-_.\w]+)"
-    path_pattern = r"(?P<path>[-_/.\w]+/)"
+    path_pattern = r"(?P<path>[-_/.+\w]+/)"
     package_pattern = r"(?P<package>[-_\w]+)"
     suffix_pattern = r"(?P<suffix>([-_](lin|linux|Linux|x64|x86|src|64|OSX))*)"
     link_pattern = "{path}{package}{version}{suffix}{ext}"
     url_pattern = r"ftp://{host}/{link}"
     releases_formats = ["ftp://{host}/{path}"]
+
+
+class HTTPFolderHoster(HTMLHoster):
+    """HTMLHoster for simple file folders exposed via HTTP
+
+    Since this is a catch all, it has a lowered priority.
+
+    It tries to find "server/path/VERSION/..../package-VERSION-extension" and
+    assumes that other versions are listed at "server/path/".
+    """
+    priority = 10
+    releases_formats = ["{prot}://{host}{path}"]
+    url_pattern = r"{prot}://{host}{path}{link}{package}{version}{suffix}{ext}"
+    link_pattern = r"{version}/"
+    prot_pattern = r"(?P<prot>https?)"
+    host_pattern = r"(?P<host>[-_.\w]+)"
+    version_pattern = r"(?:(?<=[/._-])[rv])?(?P<version>\d[\da-zA-Z\-+\.:\~_]{0,30}?)"
+    path_pattern = r"(?P<path>[-_/.+\w]+/)"
+    package_pattern = r"(?P<package>[-_\w]+)"
+    suffix_pattern = r"(?P<suffix>\+?([-_](lin|linux|Linux|x64|x86|src|64|OSX))*)"
 
 
 class OrderedHTMLHoster(HTMLHoster):

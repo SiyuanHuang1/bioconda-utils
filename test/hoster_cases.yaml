@@ -471,4 +471,14 @@ FTPHoster:
     override:
       url: "ftp://{host}/{link}/edirect.tar.gz"
       link: "{path}{version}$"
-
+HTTPFolderHoster:
+  - case: normal
+    url: https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.7.1/ncbi-blast-2.7.1+-src.tar.gz
+    version: 2.7.1
+    release_url:
+      - https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/
+    release_links:
+      - 2.7.1/
+      - 2.8.1/
+      - 2.9.0alpha/
+    parsed_versions: ['2.7.1', '2.8.1', '2.9.0alpha']
