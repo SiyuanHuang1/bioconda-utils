@@ -121,8 +121,8 @@ class HosterMeta(abc.ABCMeta):
 
     def __lt__(cls, other):
         return (
-            getattr(cls, 'priority', 0) < getattr(other, 'priority', 0)
-            or getattr(cls, '__name__') < getattr(other, '__name__')
+            (getattr(cls, 'priority', 0), getattr(cls, '__name__')) <
+            (getattr(other, 'priority', 0), getattr(cls, '__name__'))
         )
 
     @classmethod
