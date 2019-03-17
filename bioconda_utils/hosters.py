@@ -95,6 +95,7 @@ class HosterMeta(abc.ABCMeta):
             return typ
         if not typ.__name__.startswith("Custom"):
             cls.hoster_types.append(typ)
+            cls.hoster_types.sort()
 
         patterns = {attr.replace("_pattern", ""): getattr(typ, attr)
                     for attr in dir(typ) if attr.endswith("_pattern")}
@@ -117,6 +118,12 @@ class HosterMeta(abc.ABCMeta):
             setattr(typ, pat + "_re", re.compile(pattern))
 
         return typ
+
+    def __lt__(cls, other):
+        return (
+            getattr(cls, 'priority', 0) < getattr(other, 'priority', 0)
+            or getattr(cls, '__name__') < getattr(other, '__name__')
+        )
 
     @classmethod
     def select_hoster(cls, url: str, config: Dict[str, str]) -> Optional["Hoster"]:
@@ -147,6 +154,9 @@ class Hoster(metaclass=HosterMeta):
 
     #: named patterns that will change with a version upgrade
     exclude = ['version']
+
+    #: selection order - lowest first
+    priority = 0
 
     @property
     @abc.abstractmethod
