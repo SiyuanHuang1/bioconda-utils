@@ -56,7 +56,7 @@ from typing import (Any, Dict, Iterator, List, Mapping, Optional, Sequence,
                     Set, Tuple, TYPE_CHECKING)
 
 import aiofiles
-from aiohttp import ClientResponseError
+import aiohttp
 import yaml
 
 import conda_build.variants
@@ -428,8 +428,10 @@ class UpdateVersion(Filter):
                 logger.debug("Recipe %s: %s found versions: %s",
                              recipe, hoster.__class__.__name__,
                              [v['version'] for v in versions])
-            except ClientResponseError as exc:
+            except aiohttp.ClientResponseError as exc:
                 logger.debug("HTTP %s when getting %s", exc, url)
+            except aiohttp.ClientConnectorError as exc:
+                logger.debug("Connector error (%s) when getting %s", exc, url)
 
         if not version_map:
             raise self.NoRecognizedSourceUrl(recipe, source_idx+1)
