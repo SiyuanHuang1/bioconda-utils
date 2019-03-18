@@ -766,6 +766,7 @@ def clean_cran_skeleton(recipe, no_windows=False):
      Implies create-branch.''')
 @arg("--max-updates", help='''Exit after ARG updates''')
 @arg("--parallel", help='''Maximum number of recipes to consider in parallel''')
+@arg("--exclude", nargs="+", help='Glob(s) excluding packages from update')
 @arg("--dry-run", help='''Don't update remote git or github"''')
 @enable_logging()
 def autobump(recipe_folder, config, packages='*', cache=None,
@@ -774,7 +775,7 @@ def autobump(recipe_folder, config, packages='*', cache=None,
              ignore_blacklists=False,
              no_fetch_requirements=False,
              check_branch=False, create_branch=False, create_pr=False,
-             only_active=False,
+             only_active=False, exclude=None,
              max_updates=0, parallel=100, dry_run=False):
     """
     Updates recipes in recipe_folder
@@ -794,6 +795,8 @@ def autobump(recipe_folder, config, packages='*', cache=None,
     if exclude_subrecipes != "never":
         scanner.add(update.ExcludeSubrecipe,
                     always=exclude_subrecipes == "always")
+    if exclude:
+        scanner.add(update.ExcludePattern, patterns=exclude)
     git_handler = None
     if check_branch or create_branch or create_pr or only_active:
         git_handler = githandler.GitHandler(recipe_folder, dry_run)

@@ -50,7 +50,7 @@ import os
 import random
 
 from collections import defaultdict, Counter
-
+from fnmatch import fnmatch
 from urllib.parse import urlparse
 from typing import (Any, Dict, Iterator, List, Mapping, Optional, Sequence,
                     Set, Tuple, TYPE_CHECKING)
@@ -227,6 +227,20 @@ class ExcludeBlacklisted(Filter):
     async def apply(self, recipe: Recipe) -> Recipe:
         if recipe.reldir in self.blacklisted:
             raise self.Blacklisted(recipe)
+        return recipe
+
+
+class ExcludePattern(Filter):
+    """Excludes packages matching pattern"""
+    class Excluded(EndProcessingItem):
+        """Recipe matches exclude pattern"""
+        template = "is excluded"
+    def __init__(self, scanner: Scanner, patterns) -> None:
+        self.patterns = patterns
+    async def apply(self, recipe: Recipe) -> Recipe:
+        for pat in self.patterns:
+            if fnmatch(str(recipe), pat):
+                raise self.Excluded(recipe)
         return recipe
 
 
