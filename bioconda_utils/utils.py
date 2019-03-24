@@ -188,6 +188,8 @@ ENV_VAR_WHITELIST = [
 # Of those that make it through the whitelist, remove these specific ones
 ENV_VAR_BLACKLIST = [
     'CONDA_PREFIX',
+    'CONDA_SHLVL',
+    'CONDA_ROOT'
 ]
 
 # Of those, also remove these when we're running in a docker container
